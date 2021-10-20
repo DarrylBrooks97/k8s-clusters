@@ -1,0 +1,34 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: deny-incoming
+spec:
+  applyOnForward: true
+  ingress:
+  - action: Deny
+    destination:
+      nets:
+      - 169.62.177.148/32
+      - 52.117.57.157/32
+      ports:
+      - 80
+      - 443
+      # - 8081:32500
+    protocol: TCP
+    source: {}
+  - action: Deny
+    destination:
+      nets:
+      - 169.62.177.148/32
+      - 52.117.57.157/32
+      ports:
+      - 80
+      - 443
+      # - 8081:32500
+    protocol: UDP
+    source: {}
+  order: 750
+  preDNAT: true
+  selector: ibm.role == 'worker_public'
+  types:
+  - Ingress
