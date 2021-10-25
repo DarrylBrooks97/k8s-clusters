@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supabase-deployment
+  labels:
+    app: supabase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supabase
+  template:
+    metadata:
+      labels:
+        app: supabase
+    spec:
+      containers:
+        - name: supabase
+          image: supabase/postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: darryl
+            - name: POSTGRES_PASSWORD
+              value: postgres
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-controller
+  namespace: darryl
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /db
+            pathType: Prefix
+            backend:
+              service:
+                name: ingress-conroller
+                port:
+                  number: 9090
